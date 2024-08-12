@@ -8,8 +8,8 @@ const axios = require('axios');
 
 const app = express();
 app.use(express.json());
-// const API_BASE_URL = 'https://brentkew-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai'
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://brentkew-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai'
+// const API_BASE_URL = 'http://localhost:5000';
 
 
 public_users.post("/register", (req, res) => {
