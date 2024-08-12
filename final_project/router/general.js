@@ -102,25 +102,8 @@ public_users.get('/review/:isbn',function (req, res) {
 
 
 
-// Task 10: Get all books using an async callback function
-// Get the book list available in the shop ()
-const fetchBooks = async () => {
-  try {
-    const response = await axios.get('https://brentkew-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books');
-    return response.data;
-  } catch (error) {
-    throw new Error('Failed to fetch books');
-  }
-};
-public_users.get('/', async (req, res) => {
-  try {
-    // Fetch the list of books using the async function
-    const bookList = await fetchBooks();
-    return res.status(200).json(bookList); // Send the list of books as JSON response
-  } catch (error) {
-    return res.status(500).json({ message: error.message }); // Send error message if fetching fails
-  }
-});
+
+
 
 
 
