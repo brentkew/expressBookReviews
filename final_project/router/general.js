@@ -3,6 +3,11 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const bcrypt = require('bcryptjs');
+
+const app = express();
+app.use(express.json());
+
 
 
 public_users.post("/register", (req, res) => {
@@ -15,12 +20,15 @@ public_users.post("/register", (req, res) => {
   if (userExists) {
     return res.status(409).json({ message: "Username already exists. Please choose another one." });
   }
+  
+  // Hash the password before storing it
+  const hashedPassword = bcrypt.hashSync(password, 8);
   const newUser = {
     username,
-    password,
+    password: hashedPassword,
   };
   users.push(newUser);
-  return res.status(201).json({ message: "Customer successfully registered, Now you can login" });
+  return res.status(201).json({ message: "Customer successfully registered, Now you can login", user: newUser });
 });
 
 // Get the book list available in the shop
