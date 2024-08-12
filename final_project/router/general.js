@@ -177,7 +177,29 @@ public_users.get("/author/:author", async (req, res) => {
   }
 });
   
+// Task 13: Get book details based on Title using async-await
+public_users.get("/title/:title", async (req, res) => {
+  const title = req.params.title.toLowerCase();
 
+  try {
+    // Simulating asynchronous behavior with a Promise
+    const filteredBooks = await new Promise((resolve, reject) => {
+      const foundBooks = Object.values(books).filter(
+        (book) => book.title.toLowerCase() === title
+      );
+
+      if (foundBooks.length > 0) {
+        resolve(foundBooks); // Resolve the promise with the found books
+      } else {
+        reject(new Error("No books found with this title")); // Reject the promise if no books are found
+      }
+    });
+
+    return res.status(200).json(filteredBooks); // Return the list of books if found
+  } catch (error) {
+    return res.status(404).json({ message: error.message }); // Return an error if no books are found
+  }
+});
 
 
 
