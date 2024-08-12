@@ -4,10 +4,12 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
 
 const app = express();
 app.use(express.json());
-
+// const API_BASE_URL = 'https://brentkew-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai'
+const API_BASE_URL = 'http://localhost:5000';
 
 
 public_users.post("/register", (req, res) => {
@@ -102,9 +104,55 @@ public_users.get('/review/:isbn',function (req, res) {
 
 
 
+// Task 10: Get all books using an async callback function
+// Get the book list available in the shop ()
+const fetchBooks = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch books');
+  }
+};
+public_users.get('/', async (req, res) => {
+  try {
+    // Fetch the list of books using the async function
+    const bookList = await fetchBooks();
+    return res.status(200).json(bookList); // Send the list of books as JSON response
+  } catch (error) {
+    return res.status(500).json({ message: error.message }); // Send error message if fetching fails
+  }
+});
 
 
+// Task 11: Get book details based on ISBN using async-await
+public_users.get("/isbn/:isbn", async (req, res) => {
+  const isbn = req.params.isbn;
 
+  try {
+    // Simulating asynchronous behavior with a Promise
+    const bookFound = await new Promise((resolve, reject) => {
+      let found = null;
+      for (const key in books) {
+        if (books[key].isbn === isbn) {
+          found = books[key];
+          break;
+        }
+      }
+
+      if (found) {
+        resolve(found);
+      } else {
+        reject(new Error("Book not found"));
+      }
+    });
+
+    return res.status(200).json(bookFound); // Return the book details if found
+  } catch (error) {
+    return res.status(404).json({ message: error.message }); // Return an error if the book is not found
+  }
+});
+  
 
 
 
